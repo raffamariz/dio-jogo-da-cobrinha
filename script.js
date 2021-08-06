@@ -33,10 +33,10 @@ function drawFood(){
 document.addEventListener('keydown', update);
 
 function update(e){
-	if(e.keyCode == 37 && direction != 'right') direction = 'left';
-	if(e.keyCode == 38 && direction != 'down') direction = 'up';
-	if(e.keyCode == 39 && direction != 'left') direction = 'right';
-	if(e.keyCode == 40 && direction != 'up') direction = 'down';
+	if((e.keyCode == 37 || e.keyCode == 65) && direction != 'right') direction = 'left';
+	if((e.keyCode == 38 || e.keyCode == 87) && direction != 'down') direction = 'up';
+	if((e.keyCode == 39 || e.keyCode == 68) && direction != 'left') direction = 'right';
+	if((e.keyCode == 40 || e.keyCode == 83) && direction != 'up') direction = 'down';
 }
 
 function start(){
@@ -80,5 +80,6 @@ function start(){
 
 	snake.unshift(newHead);
 }
+
 
 let jogo = setInterval(start, 100);
