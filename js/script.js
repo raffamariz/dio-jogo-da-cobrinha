@@ -1,22 +1,25 @@
+let points = 0;
+let time = 150;
 let canvas = document.getElementById('snake');
 let context = canvas.getContext('2d');
 let box = 32;
-let snake = [];
+let snake = []; //lista de coordenadas que definirá o corpo da cobra
 snake[0] = {
 	x: 8 * box,
 	y: 8 * box
 }
 let direction = 'right';
-let foodX;let foodY;
 let food = {
 	x: Math.floor(Math.random() * 15 + 1) * box,
 	y: Math.floor(Math.random() * 15 + 1) * box
 }
 
+//cria tela do jogo
 function createBG(){
 	context.fillStyle = 'lightblue';
 	context.fillRect(0, 0, 16 * box, 16 * box);
 }
+
 
 function createSnake(){
 	for(let i in snake){
@@ -30,13 +33,21 @@ function drawFood(){
 	context.fillRect(food.x, food.y, box, box);
 }
 
-document.addEventListener('keydown', update);
+document.addEventListener('keydown', command);
 
-function update(e){
+function command(e){
 	if((e.keyCode == 37 || e.keyCode == 65) && direction != 'right') direction = 'left';
 	if((e.keyCode == 38 || e.keyCode == 87) && direction != 'down') direction = 'up';
 	if((e.keyCode == 39 || e.keyCode == 68) && direction != 'left') direction = 'right';
 	if((e.keyCode == 40 || e.keyCode == 83) && direction != 'up') direction = 'down';
+}
+
+function reset(){
+	snake[0] = {
+		x: 8 * box,
+		y: 8 * box
+	}
+	points = 0;
 }
 
 function start(){
@@ -48,8 +59,8 @@ function start(){
 
 	for(let i = 1; i < snake.length; i++){
 		if(snake[0].x == snake[i].x && snake[0].y == snake[i].y){
-			clearInterval(jogo);
-			alert('CE PERDEU');
+			alert('GAME OVER :(\nPontuação: ' + points);
+			window.location.reload();
 		}
 	}
 
@@ -70,8 +81,9 @@ function start(){
 	} else if(snakeX == food.x && snakeY == food.y){
 		food.x = Math.floor(Math.random() * 15 + 1) * box;
 		food.y = Math.floor(Math.random() * 15 + 1) * box;
+		points++;
+		document.querySelector('#score span').innerHTML = points;
 	}
-
 
 	let newHead = {
 		x: snakeX,
@@ -81,5 +93,21 @@ function start(){
 	snake.unshift(newHead);
 }
 
+//aumenta a velocidade de movimento da cobra de acordo com a pontuação
+function update(){
+		if(points <= 5){
+			time = 150;
+		} else if(points < 15){
+			time = 100;
+		} else if(points < 30){
+			time = 75;
+		} else {
+			time = 50;
+		}
+		let jogo = setTimeout(start, time);
+		setTimeout(update, time);
+}
 
-let jogo = setInterval(start, 100);
+update();
+
+
